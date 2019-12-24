@@ -2,5 +2,13 @@
 
 source 'https://rubygems.org'
 
-gem 'sorbet', group: :development
+gem 'rspec'
 gem 'sorbet-runtime'
+
+group :development do
+  gem 'sorbet'
+end
+
+group :test do
+  gem 'simplecov'
+end
