@@ -1,4 +1,5 @@
-sorbet/
+coverage/
+
+spec/exemples.txt
 
 DONE
-Gemfile.lock
