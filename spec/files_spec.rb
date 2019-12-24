@@ -10,16 +10,16 @@ RSpec.describe Files, '#string_mode' do
       expect(argument.files[0].string_mode).to eq '-rw-r--r--'
     end
 
-    it 'check mode on file without any permission' do
+    it 'check mode on file with all permissions' do
       f = File.new('out', 'w')
       f.write('totor')
-      f.chmod(0000)
+      f.chmod(0777)
       f.close
 
       argument = Arguments.new
       argument.parse(['out'])
 
-      expect(argument.files[0].string_mode).to eq '----------'
+      expect(argument.files[0].string_mode).to eq '-rwxrwxrwx'
     end
   end
 
