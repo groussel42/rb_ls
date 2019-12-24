@@ -5,6 +5,9 @@ SimpleCov.start do
   add_filter(/^\/spec\//)
 end
 
+require 'codecov'
+SimpleCov.formatter = SimpleCov::Formatter::Codecov
+
 RSpec.configure do |config|
   config.example_status_persistence_file_path = 'spec/examples.txt'
   config.expect_with :rspec do |expectations|
