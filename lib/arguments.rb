@@ -14,8 +14,8 @@ class Arguments
       dash_dash = true if argument == '--'
 
       add_argument(argument) if argument[0] == '-' && !dash_dash
-      @files << argument if File.file? argument
-      @folders << argument if File.directory? argument
+      @files << Files.new(argument) if File.file? argument
+      @folders << Files.new(argument) if File.directory? argument
       # TODO: if file doesn't exist
     end
   end
