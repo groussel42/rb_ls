@@ -28,7 +28,10 @@ class Arguments
   sig { params(argument: String).void }
   def add_argument(argument)
     argument = argument[1..-1]
-    @args[argument.to_sym] = true if %w[l R a r t S U x].include? argument
+
+    argument.chars.each do |letter|
+      @args[letter.to_sym] = true if %w[l R a r t S U x].include? letter
+    end
   end
 
   def arg_l?
