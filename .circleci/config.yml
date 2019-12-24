@@ -10,6 +10,7 @@ jobs:
     executor: ruby
     steps:
       - checkout
+      - run: gem install bundler:2.0.2
       - run: bundler install
       - run: rspec --failure-exit-code=0
       - persist_to_workspace:
@@ -22,6 +23,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
+      - run: gem install bundler:2.0.2
       - run: bundler install
       - run: rspec --only-failures
 
