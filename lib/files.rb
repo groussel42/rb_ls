@@ -25,14 +25,15 @@ class Files
 
   sig { returns(String) }
   def file_type
-    return 'b' if @stat.blockdev?
-    return 'c' if @stat.chardev?
-    return 'd' if @stat.directory?
-    return 's' if @stat.socket?
-    return 'l' if @stat.symlink?
-    return 'p' if @stat.pipe?
-
-    '-'
+    case
+    when @stat.blockdev?  then 'b'
+    when @stat.chardev?   then 'c'
+    when @stat.directory? then 'd'
+    when @stat.socket?    then 's'
+    when @stat.symlink?   then 'l'
+    when @stat.pipe?      then 'p'
+    else '-'
+    end
   end
 
   sig { returns(String) }
