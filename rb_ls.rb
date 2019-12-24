@@ -6,9 +6,9 @@ require 'sorbet-runtime'
 require_relative './lib/arguments'
 require_relative './lib/files'
 
-extend T::Sig
-
 class Main
+  extend T::Sig
+
   def self.main
     argument = Arguments.new
     argument.parse(ARGV)
