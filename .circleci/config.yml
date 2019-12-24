@@ -1,0 +1,33 @@
+version: 2
+
+executors:
+  ruby:
+    docker:
+      - image: circleci/ruby
+
+jobs:
+  test:
+    executor: ruby
+    steps:
+      - checkout
+      - run: bundler install
+      - run: rspec --failure-exit-code=0
+      - persist_to_workspace:
+          root: .
+          paths:
+            - '*'
+
+  test_again:
+    executor: ruby
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run: bundler install
+      - run: rspec --only-failures
+
+workflows:
+  test:
+    jobs:
+      - test
+      - test_again:
+          requires: [test]
