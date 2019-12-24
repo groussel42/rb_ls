@@ -1,4 +1,8 @@
+# typed: true
+
 class Arguments
+  extend T::Sig
+
   attr_reader :files, :folders, :args
 
   def initialize
@@ -7,6 +11,7 @@ class Arguments
     @args     = [%i[l R a r t S U x], Array.new(8, false)].transpose.to_h
   end
 
+  sig { params(arguments: T::Array[String]).void }
   def parse(arguments)
     dash_dash = false
 
@@ -20,6 +25,7 @@ class Arguments
     end
   end
 
+  sig { params(argument: String).void }
   def add_argument(argument)
     argument = argument[1..-1]
     @args[argument.to_sym] = true if %w[l R a r t S U x].include? argument

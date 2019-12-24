@@ -1,11 +1,17 @@
+# typed: true
+
 class Files
+  extend T::Sig
+
   attr_reader :name, :stat
 
+  sig { params(name: String).void }
   def initialize(name)
     @name = name
     @stat = File.stat(name)
   end
 
+  sig { returns(String) }
   def string_mode
     str = ''
 
@@ -17,16 +23,19 @@ class Files
     str
   end
 
+  sig { returns(String) }
   def file_type
-    return '-' if @stat.file?
     return 'b' if @stat.blockdev?
     return 'c' if @stat.chardev?
     return 'd' if @stat.directory?
     return 's' if @stat.socket?
     return 'l' if @stat.symlink?
     return 'p' if @stat.pipe?
+
+    '-'
   end
 
+  sig { returns(String) }
   def mode_permission
     binary  = @stat.mode.to_s(2).chars.last(9).join
     str     = ''
