@@ -34,19 +34,16 @@ class Files
 
   sig { returns(String) }
   def permissions
-    binary_groups = format_binary_array
-
-    binary_groups.each do |group|
-      group[0] = group[0] == '1' ? 'r' : '-'
-      group[1] = group[1] == '1' ? 'w' : '-'
-      group[2] = group[2] == '1' ? 'x' : '-'
+    ary     = %w[r w x]
+    result  = permission_binary.chars.map.each_with_index do |bit, index|
+      bit == '1' ? ary[index % 3] : '-'
     end
 
-    binary_groups.join
+    result.join
   end
 
-  sig { returns(T::Array[String]) }
-  def format_binary_array
-    stat.mode.to_s(2).chars.last(9).join.scan(/.../)
+  sig { returns(String) }
+  def permission_binary
+    stat.mode.to_s(2).chars.last(9).join
   end
 end
