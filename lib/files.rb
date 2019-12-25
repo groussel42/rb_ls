@@ -2,6 +2,8 @@
 
 # typed: true
 
+require 'etc'
+
 class Files
   extend T::Sig
 
@@ -15,9 +17,9 @@ class Files
 
   def mode
     mode = file_type + permissions
-    mode[3] = setuid_bit(mode) if File.setuid? name
+    mode[3] = setuid_bit(mode) if stat.setuid? name
     mode[6] = 's' if File.setgid? name
-    mode[-1] = sticky_bit(mode) if File.sticky? name
+    mode[-1] = sticky_bit(mode) if stat.sticky? name
 
     mode
   end
@@ -33,6 +35,18 @@ class Files
     when stat.pipe?      then 'p'
     else '-'
     end
+  end
+
+  def mtime
+    stat.mtime.strftime('%Y-%m-%d %H:%M:%S')
+  end
+
+  def gid
+    Etc.getgrgid.name
+  end
+
+  def uid
+    Etc.getpwuid.name
   end
 
   sig { returns(String) }

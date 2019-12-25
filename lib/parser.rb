@@ -15,6 +15,11 @@ class Parser
     @args         = [%i[l R a r t S U x], Array.new(8, false)].transpose.to_h
   end
 
+  # FIXME: arguments going in inexistant files array
+  # TODO: -a
+  # TODO: -U
+  # TODO: -t
+  # TODO: -S
   def parse
     dash_dash = false
 
@@ -24,7 +29,15 @@ class Parser
       add_argument(argument) if argument[0] == '-' && !dash_dash
       @files << Files.new(argument) if File.file? argument
       @folders << Files.new(argument) if File.directory? argument
-      @inexistants << argument unless File.exist? argument
+      @inexistants << argument unless File.exist?(argument)
+    end
+
+    if arg_t?
+      @files.sort_by!(&:stat.mtime)
+      @folders.sort_by!(&:stat.mtime)
+    elsif !arg_U?
+      @files.sort_by!(&:name)
+      @folders.sort_by!(&:name)
     end
   end
 
