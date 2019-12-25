@@ -14,9 +14,12 @@ class Files
   end
 
   def mode
-    file_type + permissions
-    # TODO: sticky bits
-    # TODO: ACL
+    mode = file_type + permissions
+    mode[3] = setuid_bit(mode) if File.setuid? name
+    mode[6] = 's' if File.setgid? name
+    mode[-1] = sticky_bit(mode) if File.sticky? name
+
+    mode
   end
 
   sig { returns(String) }
@@ -45,5 +48,13 @@ class Files
   sig { returns(String) }
   def permission_binary
     stat.mode.to_s(2).chars.last(9).join
+  end
+
+  def setuid_bit(mode)
+    mode[3] == 'x' ? 's' : 'S'
+  end
+
+  def sticky_bit(mode)
+    mode[-1] == 'x' ? 't' : 'T'
   end
 end
