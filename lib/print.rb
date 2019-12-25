@@ -1,11 +1,30 @@
 # string_frozen_literal: true
 
-# TODO: padding -l
 # TODO: -l
 def long_info(files)
+  padding = calc_padding(files)
+
   files.map do |file|
-    "#{file.permissions} #{file.stat.size} #{file.gid} #{file.uid} #{file.mtime} #{file.name}"
+    sprintf("%#{padding[:permissions]}s %#{padding[:size]}d %#{padding[:uid]}s %#{padding[:gid]}s %s", file.permissions, file.stat.size, file.uid, file.gid, file.name)
   end
+end
+
+def calc_padding(files)
+  padding = {
+    permissions: 0,
+    size: 0,
+    gid: 0,
+    uid: 0
+  }
+
+  files.each do |file|
+    padding[:permissions] = file.permissions.length if file.permissions.length > padding[:permissions]
+    padding[:size] = file.stat.size.to_s.length if file.stat.size.to_s.length > padding[:size]
+    padding[:gid] = file.gid.length if file.gid.length > padding[:gid]
+    padding[:uid] = file.uid.length if file.uid.length > padding[:uid]
+  end
+
+  padding
 end
 
 # TODO: -x
@@ -14,7 +33,7 @@ def print_files(parser)
   str = parser.arg_l? ? long_info(parser.files) : parser.files.map(&:name)
 
   str = str.reverse if parser.arg_r?
-  puts parser.arg_l? ? str.join("\n") : str.join(' ')
+  puts parser.arg_l? ? str.join("\n") : str.join('  ')
 end
 
 def print_inexistants_files(inexistants_files)
