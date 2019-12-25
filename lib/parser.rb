@@ -33,8 +33,8 @@ class Parser
     end
 
     if arg_t?
-      @files.sort_by!(&:stat.mtime)
-      @folders.sort_by!(&:stat.mtime)
+      @files.sort_by! { |file| file.stat.mtime }
+      @folders.sort_by! { |file| file.stat.mtime }
     elsif !arg_U?
       @files.sort_by!(&:name)
       @folders.sort_by!(&:name)

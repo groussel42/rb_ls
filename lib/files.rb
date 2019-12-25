@@ -17,9 +17,9 @@ class Files
 
   def mode
     mode = file_type + permissions
-    mode[3] = setuid_bit(mode) if stat.setuid? name
+    mode[3] = setuid_bit(mode) if File.setuid? name
     mode[6] = 's' if File.setgid? name
-    mode[-1] = sticky_bit(mode) if stat.sticky? name
+    mode[-1] = sticky_bit(mode) if File.sticky? name
 
     mode
   end
