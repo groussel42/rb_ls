@@ -2,5 +2,6 @@ coverage/
 
 spec/examples.txt
 
+.solargraph.yml
 DONE
 out
