@@ -1,21 +1,23 @@
+# frozen_string_literal: true
+
 # typed: true
 
-class Arguments
+class Parser
   extend T::Sig
 
-  attr_reader :files, :folders, :args
+  attr_reader :argv, :files, :folders, :args
 
-  def initialize
+  def initialize(argv)
+    @argv     = argv
     @files    = []
     @folders  = []
     @args     = [%i[l R a r t S U x], Array.new(8, false)].transpose.to_h
   end
 
-  sig { params(arguments: T::Array[String]).void }
-  def parse(arguments)
+  def parse
     dash_dash = false
 
-    arguments.each do |argument|
+    @argv.each do |argument|
       dash_dash = true if argument == '--'
 
       add_argument(argument) if argument[0] == '-' && !dash_dash

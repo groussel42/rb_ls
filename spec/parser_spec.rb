@@ -1,28 +1,32 @@
-require 'arguments'
+# frozen_string_literal: true
+
+# typed: false
+
+require 'parser'
 require 'files'
 
-RSpec.describe Arguments, '#add_argument' do
+RSpec.describe Parser, '#add_argument' do
   context 'with splitted arguments' do
     it 'random arguments' do
       expected = { l: true, R: true, a: false, r: true, t: false, S: false, U: true,x: false }
-      argument = Arguments.new
-      argument.parse(%w[-l -R -r -U])
+      argument = Parser.new(%w[-l -R -r -U])
+      argument.parse
 
       expect(argument.args).to eq expected
     end
 
     it 'arguments inexistants' do
       expected = { l: false, R: false, a: false, r: false, t: false, S: false, U: false,x: false }
-      argument = Arguments.new
-      argument.parse(%w[-v -P -o])
+      argument = Parser.new(%w[-v -P -o])
+      argument.parse
 
       expect(argument.args).to eq expected
     end
 
     it 'arguments after double dashes' do
       expected = { l: true, R: false, a: false, r: true, t: false, S: false, U: false,x: false }
-      argument = Arguments.new
-      argument.parse(%w[-l -r -- -R -a])
+      argument = Parser.new(%w[-l -r -- -R -a])
+      argument.parse
 
       expect(argument.args).to eq expected
     end
@@ -31,24 +35,24 @@ RSpec.describe Arguments, '#add_argument' do
   context 'with sticked arguments' do
     it 'random arguments' do
       expected = { l: true, R: true, a: false, r: true, t: false, S: false, U: true,x: false }
-      argument = Arguments.new
-      argument.parse(%w[-lRrU])
+      argument = Parser.new(%w[-lRrU])
+      argument.parse
 
       expect(argument.args).to eq expected
     end
 
     it 'arguments inexistants' do
       expected = { l: false, R: false, a: false, r: false, t: false, S: false, U: false,x: false }
-      argument = Arguments.new
-      argument.parse(%w[-vPo])
+      argument = Parser.new(%w[-vPo])
+      argument.parse
 
       expect(argument.args).to eq expected
     end
 
     it 'arguments after double dashes' do
       expected = { l: true, R: false, a: false, r: true, t: false, S: false, U: false,x: false }
-      argument = Arguments.new
-      argument.parse(%w[-lr -- -Ra])
+      argument = Parser.new(%w[-lr -- -Ra])
+      argument.parse
 
       expect(argument.args).to eq expected
     end
@@ -57,39 +61,36 @@ RSpec.describe Arguments, '#add_argument' do
   context 'with mixed arguments' do
     it 'random arguments' do
       expected = { l: true, R: true, a: false, r: true, t: false, S: false, U: true,x: false }
-      argument = Arguments.new
-      argument.parse(%w[-lRr -U])
+      argument = Parser.new(%w[-lRr -U])
+      argument.parse
 
       expect(argument.args).to eq expected
     end
 
     it 'arguments inexistants' do
       expected = { l: false, R: false, a: false, r: false, t: false, S: false, U: false,x: false }
-      argument = Arguments.new
-      argument.parse(%w[-vP -o])
+      argument = Parser.new(%w[-vP -o])
+      argument.parse
 
       expect(argument.args).to eq expected
     end
 
     it 'arguments after double dashes' do
       expected = { l: true, R: false, a: true, r: true, t: false, S: false, U: false,x: false }
-      argument = Arguments.new
-      argument.parse(%w[-lr -a -- -R])
+      argument = Parser.new(%w[-lr -a -- -R])
+      argument.parse
 
       expect(argument.args).to eq expected
     end
   end
 end
 
-RSpec.describe Arguments, '#parse' do
-  # TODO: check folders
-  # TODO: check folders with double dashes
-  # TODO: check inexsistants folders
+RSpec.describe Parser, '#parse' do
   context 'with files' do
     it 'existant files' do
       expected = %w[Gemfile rb_ls.rb]
-      argument = Arguments.new
-      argument.parse(%w[-l Gemfile lib rb_ls.rb spec -a])
+      argument = Parser.new(%w[-l Gemfile lib rb_ls.rb spec -a])
+      argument.parse
 
       result = argument.files.map(&:name)
 
@@ -98,8 +99,8 @@ RSpec.describe Arguments, '#parse' do
 
     it 'existant files after double dashes' do
       expected = %w[Gemfile rb_ls.rb]
-      argument = Arguments.new
-      argument.parse(%w[-l Gemfile lib -- spec rb_ls.rb -a])
+      argument = Parser.new(%w[-l Gemfile lib -- spec rb_ls.rb -a])
+      argument.parse
 
       result = argument.files.map(&:name)
 
@@ -108,8 +109,8 @@ RSpec.describe Arguments, '#parse' do
 
     it 'inexistant files' do
       expected = %w[Gemfile]
-      argument = Arguments.new
-      argument.parse(%w[-l Gemfile lib rb_l.rb spek -a])
+      argument = Parser.new(%w[-l Gemfile lib rb_l.rb spek -a])
+      argument.parse
 
       result = argument.files.map(&:name)
 
@@ -118,8 +119,8 @@ RSpec.describe Arguments, '#parse' do
 
     it 'existant folders' do
       expected = %w[lib spec]
-      argument = Arguments.new
-      argument.parse(%w[-l Gemfile lib rb_ls.rb spec -a])
+      argument = Parser.new(%w[-l Gemfile lib rb_ls.rb spec -a])
+      argument.parse
 
       result = argument.folders.map(&:name)
 
@@ -128,8 +129,8 @@ RSpec.describe Arguments, '#parse' do
 
     it 'existant folders after double dashes' do
       expected = %w[lib spec]
-      argument = Arguments.new
-      argument.parse(%w[-l Gemfile lib -- spec rb_ls.rb -a])
+      argument = Parser.new(%w[-l Gemfile lib -- spec rb_ls.rb -a])
+      argument.parse
 
       result = argument.folders.map(&:name)
 
@@ -138,8 +139,8 @@ RSpec.describe Arguments, '#parse' do
 
     it 'inexistant folders' do
       expected = %w[lib]
-      argument = Arguments.new
-      argument.parse(%w[-l Gemfile lib rb_ls.rb spek -a])
+      argument = Parser.new(%w[-l Gemfile lib rb_ls.rb spek -a])
+      argument.parse
 
       result = argument.folders.map(&:name)
 
@@ -148,11 +149,11 @@ RSpec.describe Arguments, '#parse' do
   end
 end
 
-RSpec.describe Arguments, '#parse' do
+RSpec.describe Parser, '#parse' do
   it 'arg_l?' do
     expected = [true, false, false, false, false, false, false, false]
-    argument = Arguments.new
-    argument.parse(%w[-l])
+    argument = Parser.new(%w[-l])
+    argument.parse
 
     expect(
       [
@@ -170,8 +171,8 @@ RSpec.describe Arguments, '#parse' do
 
   it 'arg_R?' do
     expected = [false, true, false, false, false, false, false, false]
-    argument = Arguments.new
-    argument.parse(%w[-R])
+    argument = Parser.new(%w[-R])
+    argument.parse
 
     expect(
       [
@@ -189,8 +190,8 @@ RSpec.describe Arguments, '#parse' do
 
   it 'arg_a?' do
     expected = [false, false, true, false, false, false, false, false]
-    argument = Arguments.new
-    argument.parse(%w[-a])
+    argument = Parser.new(%w[-a])
+    argument.parse
 
     expect(
       [
@@ -208,8 +209,8 @@ RSpec.describe Arguments, '#parse' do
 
   it 'arg_r?' do
     expected = [false, false, false, true, false, false, false, false]
-    argument = Arguments.new
-    argument.parse(%w[-r])
+    argument = Parser.new(%w[-r])
+    argument.parse
 
     expect(
       [
@@ -227,8 +228,8 @@ RSpec.describe Arguments, '#parse' do
 
   it 'arg_t?' do
     expected = [false, false, false, false, true, false, false, false]
-    argument = Arguments.new
-    argument.parse(%w[-t])
+    argument = Parser.new(%w[-t])
+    argument.parse
 
     expect(
       [
@@ -246,8 +247,8 @@ RSpec.describe Arguments, '#parse' do
 
   it 'arg_S?' do
     expected = [false, false, false, false, false, true, false, false]
-    argument = Arguments.new
-    argument.parse(%w[-S])
+    argument = Parser.new(%w[-S])
+    argument.parse
 
     expect(
       [
@@ -265,8 +266,8 @@ RSpec.describe Arguments, '#parse' do
 
   it 'arg_U?' do
     expected = [false, false, false, false, false, false, true, false]
-    argument = Arguments.new
-    argument.parse(%w[-U])
+    argument = Parser.new(%w[-U])
+    argument.parse
 
     expect(
       [
@@ -284,8 +285,8 @@ RSpec.describe Arguments, '#parse' do
 
   it 'arg_x?' do
     expected = [false, false, false, false, false, false, false, true]
-    argument = Arguments.new
-    argument.parse(%w[-x])
+    argument = Parser.new(%w[-x])
+    argument.parse
 
     expect(
       [

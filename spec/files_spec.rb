@@ -1,13 +1,16 @@
-require 'arguments'
+# frozen_string_literal: true
+
+# typed: false
+
+require 'parser'
 require 'files'
 
-RSpec.describe Files, '#string_mode' do
+RSpec.describe Files, '#mode' do
   context 'with normal files' do
     it 'check mode on simple file' do
-      argument = Arguments.new
-      argument.parse(['rb_ls.rb'])
-
-      expect(argument.files[0].string_mode).to eq '-rw-r--r--'
+      argument = Parser.new(['rb_ls.rb'])
+      argument.parse
+      expect(argument.files[0].mode).to eq '-rw-r--r--'
     end
 
     it 'check mode on file with all permissions' do
@@ -16,17 +19,17 @@ RSpec.describe Files, '#string_mode' do
       f.chmod(0777)
       f.close
 
-      argument = Arguments.new
-      argument.parse(['out'])
+      argument = Parser.new(['out'])
+      argument.parse
 
-      expect(argument.files[0].string_mode).to eq '-rwxrwxrwx'
+      expect(argument.files[0].mode).to eq '-rwxrwxrwx'
     end
   end
 
   it 'check mode on simple directory' do
-    argument = Arguments.new
-    argument.parse(['lib'])
+    argument = Parser.new(['lib'])
+    argument.parse
 
-    expect(argument.folders[0].string_mode).to eq 'drwxr-xr-x'
+    expect(argument.folders[0].mode).to eq 'drwxr-xr-x'
   end
 end
