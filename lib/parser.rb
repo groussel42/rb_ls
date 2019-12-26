@@ -18,7 +18,7 @@ class Parser
   # TODO: -t
   # TODO: -S
   # TODO: sort by name
-  sig { returns(T::Array[T.any(T::Array[Files], T::Array[T.noreturn])]) }
+  sig { returns(T::Array[T.any(T::Array[Files], T::Array[String], T::Array[T.noreturn])]) }
   def parse
     files       = []
     folders     = []
@@ -35,9 +35,7 @@ class Parser
       inexistants << argument unless File.exist? "#{path}/#{argument}"
     end
 
-    print_inexistants_files(inexistants) unless inexistants.empty? || inexistants.nil?
-
-    [files, folders]
+    [files, folders, inexistants]
   end
 
   sig { params(argument: String).void }

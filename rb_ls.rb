@@ -15,8 +15,9 @@ class Main
   # TODO: show files then folders
   def self.main
     parser = Parser.new(ARGV)
-    files, folders = parser.parse
+    files, folders, inexistants = parser.parse
 
+    print_inexistants_files(inexistants) unless inexistants.empty? || inexistants.nil?
     print_files(files, parser)
     folders.each do |folder|
       through_folder(folder, parser)
