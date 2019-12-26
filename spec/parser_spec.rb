@@ -90,9 +90,9 @@ RSpec.describe Parser, '#parse' do
     it 'existant files' do
       expected = %w[Gemfile rb_ls.rb]
       argument = Parser.new(%w[-l Gemfile lib rb_ls.rb spec -a])
-      argument.parse
+      files, = argument.parse
 
-      result = argument.files.map(&:name)
+      result = files.map(&:name)
 
       expect(result).to eq expected
     end
@@ -100,9 +100,9 @@ RSpec.describe Parser, '#parse' do
     it 'existant files after double dashes' do
       expected = %w[Gemfile rb_ls.rb]
       argument = Parser.new(%w[-l Gemfile lib -- spec rb_ls.rb -a])
-      argument.parse
+      files, = argument.parse
 
-      result = argument.files.map(&:name)
+      result = files.map(&:name)
 
       expect(result).to eq expected
     end
@@ -110,9 +110,9 @@ RSpec.describe Parser, '#parse' do
     it 'inexistant files' do
       expected = %w[Gemfile]
       argument = Parser.new(%w[-l Gemfile lib rb_l.rb spek -a])
-      argument.parse
+      files, = argument.parse
 
-      result = argument.files.map(&:name)
+      result = files.map(&:name)
 
       expect(result).to eq expected
     end
@@ -120,9 +120,9 @@ RSpec.describe Parser, '#parse' do
     it 'existant folders' do
       expected = %w[lib spec]
       argument = Parser.new(%w[-l Gemfile lib rb_ls.rb spec -a])
-      argument.parse
+      _, folders, = argument.parse
 
-      result = argument.folders.map(&:name)
+      result = folders.map(&:name)
 
       expect(result).to eq expected
     end
@@ -130,9 +130,9 @@ RSpec.describe Parser, '#parse' do
     it 'existant folders after double dashes' do
       expected = %w[lib spec]
       argument = Parser.new(%w[-l Gemfile lib -- spec rb_ls.rb -a])
-      argument.parse
+      _, folders, = argument.parse
 
-      result = argument.folders.map(&:name)
+      result = folders.map(&:name)
 
       expect(result).to eq expected
     end
@@ -140,9 +140,9 @@ RSpec.describe Parser, '#parse' do
     it 'inexistant folders' do
       expected = %w[lib]
       argument = Parser.new(%w[-l Gemfile lib rb_ls.rb spek -a])
-      argument.parse
+      _, folders, = argument.parse
 
-      result = argument.folders.map(&:name)
+      result = folders.map(&:name)
 
       expect(result).to eq expected
     end

@@ -9,8 +9,9 @@ RSpec.describe Files, '#mode' do
   context 'with normal files' do
     it 'check mode on simple file' do
       argument = Parser.new(['rb_ls.rb'])
-      argument.parse
-      expect(argument.files[0].mode).to eq '-rw-r--r--'
+      files, = argument.parse
+
+      expect(files[0].mode).to eq '-rw-r--r--'
     end
 
     it 'check mode on file with all permissions' do
@@ -20,16 +21,16 @@ RSpec.describe Files, '#mode' do
       f.close
 
       argument = Parser.new(['out'])
-      argument.parse
+      files, = argument.parse
 
-      expect(argument.files[0].mode).to eq '-rwxrwxrwx'
+      expect(files[0].mode).to eq '-rwxrwxrwx'
     end
   end
 
   it 'check mode on simple directory' do
     argument = Parser.new(['lib'])
-    argument.parse
+    _, folders, = argument.parse
 
-    expect(argument.folders[0].mode).to eq 'drwxr-xr-x'
+    expect(folders[0].mode).to eq 'drwxr-xr-x'
   end
 end

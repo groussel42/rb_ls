@@ -29,8 +29,8 @@ end
 
 # TODO: -x
 # TODO: print in column
-def print_files(parser)
-  str = parser.arg_l? ? long_info(parser.files) : parser.files.map(&:name)
+def print_files(files, parser)
+  str = parser.arg_l? ? long_info(files) : files.map(&:name)
 
   str = str.reverse if parser.arg_r?
   puts parser.arg_l? ? str.join("\n") : str.join('  ')

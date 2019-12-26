@@ -14,11 +14,11 @@ class Main
   # TODO: -R
   # TODO: show files then folders
   def self.main
-    argument = Parser.new(ARGV)
-    argument.parse
+    parser = Parser.new(ARGV)
+    files, folders, inexistants = parser.parse
 
-    print_inexistants_files(argument.inexistants)
-    print_files(argument)
+    print_inexistants_files(inexistants)
+    print_files(files, parser)
   end
 end
 

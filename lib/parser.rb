@@ -5,13 +5,10 @@
 class Parser
   extend T::Sig
 
-  attr_reader :argv, :files, :folders, :inexistants, :args
+  attr_reader :argv, :args
 
   def initialize(argv)
     @argv         = argv
-    @files        = []
-    @folders      = []
-    @inexistants  = []
     @args         = [%i[l R a r t S U x], Array.new(8, false)].transpose.to_h
   end
 
@@ -20,25 +17,23 @@ class Parser
   # TODO: -U
   # TODO: -t
   # TODO: -S
+  # TODO: sort by name
   def parse
-    dash_dash = false
+    files       = []
+    folders     = []
+    inexistants = []
+    dash_dash   = false
 
     @argv.each do |argument|
       dash_dash = true if argument == '--'
 
       add_argument(argument) if argument[0] == '-' && !dash_dash
-      @files << Files.new(argument) if File.file? argument
-      @folders << Files.new(argument) if File.directory? argument
-      @inexistants << argument unless File.exist?(argument)
+      files << Files.new(argument) if File.file? argument
+      folders << Files.new(argument) if File.directory? argument
+      inexistants << argument unless File.exist? argument
     end
 
-    if arg_t?
-      @files.sort_by! { |file| file.stat.mtime }
-      @folders.sort_by! { |file| file.stat.mtime }
-    elsif !arg_U?
-      @files.sort_by!(&:name)
-      @folders.sort_by!(&:name)
-    end
+    [files, folders, inexistants]
   end
 
   sig { params(argument: String).void }
