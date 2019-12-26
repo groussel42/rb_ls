@@ -7,12 +7,13 @@ require 'etc'
 class Files
   extend T::Sig
 
-  attr_reader :name, :stat
+  attr_reader :name, :path, :stat
 
-  sig { params(name: String).void }
-  def initialize(name)
-    @name = name
-    @stat = File.stat(name)
+  sig { params(path: String).void }
+  def initialize(path)
+    @path = path
+    @name = File.basename(path)
+    @stat = File.stat(path)
   end
 
   def mode

@@ -18,22 +18,26 @@ class Parser
   # TODO: -t
   # TODO: -S
   # TODO: sort by name
+  sig { returns(T::Array[T.any(T::Array[Files], T::Array[T.noreturn])]) }
   def parse
     files       = []
     folders     = []
     inexistants = []
     dash_dash   = false
 
+    path = Dir.pwd
     @argv.each do |argument|
       dash_dash = true if argument == '--'
 
       add_argument(argument) if argument[0] == '-' && !dash_dash
-      files << Files.new(argument) if File.file? argument
-      folders << Files.new(argument) if File.directory? argument
-      inexistants << argument unless File.exist? argument
+      files << Files.new("#{path}/#{argument}") if File.file? "#{path}/#{argument}"
+      folders << Files.new("#{path}/#{argument}") if File.directory? "#{path}/#{argument}"
+      inexistants << argument unless File.exist? "#{path}/#{argument}"
     end
 
-    [files, folders, inexistants]
+    print_inexistants_files(inexistants) unless inexistants.empty? || inexistants.nil?
+
+    [files, folders]
   end
 
   sig { params(argument: String).void }
